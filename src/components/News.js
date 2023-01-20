@@ -1,37 +1,51 @@
-import React, { useState } from "react";
-import { Button } from "@mui/material";
+import React, { useState, useEffect } from "react";
+// import { Button } from "@mui/material";
+import NewsItem from "./NewsItem";
 
 const News = (props) => {
-    const [news, setNews] = useState([])
+    const [articles, setArticles] = useState([])
 
-	const fetchNews = async () => {
+	const capitalizeFirstLetter = (string) => {
+		return string.charAt(0).toUpperCase() + string.slice(1);
+	}
+
+	const updateNews = async () => {
 		try {
-			const url = `https://api.newscatcherapi.com/v2/search?q=${props.type}&page_size=5`
+			const url = `https://api.newscatcherapi.com/v2/search?q=${props.category}&countries=IN&page_size=5`
 			const response = await fetch(url, {
 				method: 'GET',
 				headers: {
 					'Content-type': 'application/json',
-					'x-api-key': 'jTqjLgWbOWKlinYhe0D3mgDo58ja5Xv4vjRQVyA7OyA'
-				}
+					'x-api-key': 'SGLxMPte_jDxLFuOYtm-FZ32i3EaWpjVdh1XAvr3e-A',
+					'Retry-After': 2000
+				},
+				cors: 'no-cors'
 			});
-			const object = await response.json();
-			const res = news.concat(object.articles);
-			setNews(res)
+			const parsedData = await response.json();
+			console.log(parsedData.articles)
+			setArticles(parsedData.articles)
 		} catch (error) {
 			console.log(error.message)
 		}
 	}
 
+	useEffect(() => {
+		updateNews();
+		document.title = capitalizeFirstLetter(props.category);
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
+	
 
     return (
         <>
             <div className="container">
-                <div>
-                    <Button variant="contained" onClick={fetchNews}>Fetch {props.type} News</Button>
-                </div>
-            
-                {news.map((element, index) => {
-                    return (<div key={index}>{element.title}</div>)
+                {articles.map((element, index) => {
+                    return (<NewsItem key={element._id} 
+								title={element.title} 
+								description={element.description} 
+								imagesrc={element.media} 
+								link={element.link}
+					/>)
                 })}
             </div>
         </>

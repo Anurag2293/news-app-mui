@@ -8,10 +8,10 @@ function App() {
 		<>
 			<Navbar/>
 			<Routes>
-				<Route exact path="/" element={<News type="general"/>} />
-				<Route exact path="/sports" element={<News type="sports"/>} />
-				<Route exact path="/entertainment" element={<News type="entertainment"/>} />
-				<Route exact path="/movies" element={<News type="movies"/>} />
+				<Route exact path="/" element={<News key="general" category="general" />} />
+				<Route exact path="/sports" element={<News key="sports" category="sports"/>} />
+				<Route exact path="/entertainment" element={<News key="entertainment" category="entertainment"/>} />
+				<Route exact path="/movies" element={<News key="movies" category="movies"/>} />
 			</Routes>
 		</>
 	);
